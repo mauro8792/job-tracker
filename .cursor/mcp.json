@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "atlassian": {
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "description": "Jira + Confluence (OAuth, read-only per app permissions)"
+    },
+    "mongodb-testing": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server@latest",
+        "--readOnly"
+      ],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "${env:MONGODB_ENV_CNN}",
+        "MDB_MCP_READ_ONLY": "true"
+      },
+      "envFile": "${workspaceFolder}/.env",
+      "description": "MongoDB testing, read-only"
+    },
+    "sqlserver-testing": {
+      "command": "npx",
+      "args": ["-y", "@ggball/mcp-sqlserver"],
+      "envFile": "${workspaceFolder}/.env",
+      "description": "SQL Server testing, read-only (SELECT only). Usa .env: SQLSERVER_HOST, SQLSERVER_PORT, SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+description: Roadmap y contexto para construir DevJobTracker, una app para devs LATAM que buscan trabajo remoto. Activar cuando se hable de este proyecto, job tracker, o búsqueda laboral app.
+alwaysApply: false
+---
+
+# DevJobTracker - App de gestión de búsqueda laboral para devs
+
+## Visión del producto
+
+App web para desarrolladores de LATAM que buscan trabajo remoto en USA/Europa. Centraliza gestión de plataformas, Kanban de aplicaciones, preparación para entrevistas, CV, comunidad y progreso en un solo lugar.
+
+## Público objetivo
+
+Devs de LATAM (Argentina, México, Colombia, Chile, Brasil) buscando trabajo remoto. Perfil típico: 3-7 años de experiencia, inglés intermedio, quiere duplicar su salario.
+
+## Stack técnico
+
+- **Frontend**: Next.js 16 + Tailwind CSS 4 + TypeScript 5 + Recharts
+- **Backend**: Node.js + NestJS + TypeScript
+- **DB**: MongoDB (+ Redis opcional para cache)
+- **Auth**: JWT con Google OAuth
+- **Pagos** (fase 4): Mercado Pago (ARG) + Stripe (internacional)
+- **Deploy**: Vercel (frontend), Railway o Render (backend)
+
+## Estado del producto
+
+La **Fase 1** (MVP frontend con datos locales) está superada: el producto usa **API + MongoDB**, auth y la mayoría de módulos migrados.
+
+**Qué falta y qué está hecho por fase:** ver siempre **`docs/PENDIENTES.md`** en el repo `job-tracker` (backlog unificado, no duplicar aquí).
+
+## Principios de desarrollo
+
+- Mobile-first, dark mode por defecto
+- UX simple, sin fricción
+- Datos del usuario exportables
+- Persistencia vía API (`api-store` / backend), no depender del navegador para datos de producto
+- Responder en español al usuario
