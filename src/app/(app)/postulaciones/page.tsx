@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { apiStore } from "@/lib/api-store";
 import { Application, APPLICATION_COLUMNS, ApplicationStatus } from "@/lib/types";
-import { Plus, Trash2, ExternalLink, X, ChevronRight, Star, PartyPopper } from "lucide-react";
+import { Plus, Trash2, ExternalLink, X, ChevronRight, Star, PartyPopper, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { AppSectionIntro } from "@/components/SectionIntroModal";
 
@@ -16,10 +16,16 @@ export default function ApplicationsPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewName, setReviewName] = useState("");
   const [reviewComment, setReviewComment] = useState("");
+  const [savingNew, setSavingNew] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     apiStore.getApplications().then(setApps).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!showForm) setSavingNew(false);
+  }, [showForm]);
 
   const refresh = useCallback(async () => {
     const data = await apiStore.getApplications();
@@ -28,24 +34,36 @@ export default function ApplicationsPage() {
 
   const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    await apiStore.addApplication({
-      company: form.get("company") as string,
-      role: form.get("role") as string,
-      platform: form.get("platform") as string,
-      salary: form.get("salary") as string,
-      url: form.get("url") as string,
-      notes: form.get("notes") as string,
-      status: "applied",
-      appliedDate: new Date().toISOString(),
-    });
-    setShowForm(false);
-    refresh();
+    if (savingNew) return;
+    setSavingNew(true);
+    try {
+      const form = new FormData(e.currentTarget);
+      await apiStore.addApplication({
+        company: form.get("company") as string,
+        role: form.get("role") as string,
+        platform: form.get("platform") as string,
+        salary: form.get("salary") as string,
+        url: form.get("url") as string,
+        notes: form.get("notes") as string,
+        status: "applied",
+        appliedDate: new Date().toISOString(),
+      });
+      setShowForm(false);
+      await refresh();
+    } finally {
+      setSavingNew(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
-    await apiStore.deleteApplication(id);
-    refresh();
+    if (deletingId) return;
+    setDeletingId(id);
+    try {
+      await apiStore.deleteApplication(id);
+      await refresh();
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleDragStart = (id: string) => setDraggedApp(id);
@@ -149,11 +167,20 @@ export default function ApplicationsPage() {
                 <textarea name="notes" rows={2} className="w-full rounded-lg border border-border bg-surface-light px-3 py-2 text-sm text-text focus:border-primary focus:outline-none resize-none" />
               </div>
               <div className="flex justify-end gap-3">
-                <button type="button" onClick={() => setShowForm(false)} className="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text">
+                <button
+                  type="button"
+                  onClick={() => !savingNew && setShowForm(false)}
+                  disabled={savingNew}
+                  className="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text disabled:opacity-50"
+                >
                   Cancelar
                 </button>
-                <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover">
-                  Guardar
+                <button
+                  type="submit"
+                  disabled={savingNew}
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-60 disabled:pointer-events-none"
+                >
+                  {savingNew ? "Guardando…" : "Guardar"}
                 </button>
               </div>
             </form>
@@ -261,26 +288,45 @@ export default function ApplicationsPage() {
                 {colApps.map((app) => (
                   <div
                     key={app.id}
-                    draggable
+                    draggable={deletingId !== app.id}
                     onDragStart={() => handleDragStart(app.id)}
-                    className={`rounded-lg border p-3 cursor-grab active:cursor-grabbing transition-colors ${
+                    className={`relative rounded-lg border p-3 cursor-grab active:cursor-grabbing transition-colors ${
                       col.id === "hired"
                         ? "border-primary/30 bg-primary/5 hover:border-primary/50"
                         : "border-border bg-surface-light hover:border-primary/40"
                     }`}
                   >
+                    {deletingId === app.id && (
+                      <div
+                        className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-surface/85 backdrop-blur-[1px]"
+                        aria-busy
+                        aria-label="Borrando…"
+                      >
+                        <Loader2 className="h-6 w-6 animate-spin text-red-400" />
+                      </div>
+                    )}
                     <div className="flex items-start justify-between">
-                      <Link href={`/postulaciones/${app.id}`} className="flex-1">
+                      <Link href={`/postulaciones/${app.id}`} className="flex-1 min-w-0">
                         <p className="font-medium text-sm hover:text-primary transition-colors">{app.company}</p>
                         <p className="text-xs text-text-muted mt-0.5">{app.role}</p>
                       </Link>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 shrink-0">
                         {app.url && (
                           <a href={app.url} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-text p-1">
                             <ExternalLink className="h-3.5 w-3.5" />
                           </a>
                         )}
-                        <button onClick={() => handleDelete(app.id)} className="text-text-muted hover:text-red-400 p-1">
+                        <button
+                          type="button"
+                          disabled={deletingId === app.id}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDelete(app.id);
+                          }}
+                          className="text-text-muted hover:text-red-400 p-1 disabled:opacity-50 disabled:pointer-events-none"
+                          aria-label="Eliminar postulación"
+                        >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
