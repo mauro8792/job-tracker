@@ -9,10 +9,12 @@ Este archivo es el **seguimiento vivo** de qué está hecho y qué falta. La reg
 | Fase | Tema | Estado global |
 |------|------|----------------|
 | **1** | MVP frontend (mock/local) | Completa (histórico) |
-| **2** | Backend, auth, datos en API | Casi cerrada → pendiente principal: **email** (más allá de bienvenida) |
+| **2** | Backend, auth, datos en API | **Producción desplegada** (Vercel + Render + Atlas). Pendiente “producto”: **email** ampliado |
 | **3** | Comunidad, feed, perfiles | Casi cerrada → opcional: **explore sin login** |
-| **4** | Monetización + backoffice | No iniciada |
+| **4** | Monetización + backoffice | **En curso:** app `job-tracker-backoffice` (UI mock) |
 | **5** | IA, job boards, PWA, i18n, etc. | No iniciada |
+
+**Qué sigue ahora (prioridad sugerida):** (1) emails transaccionales / notificaciones, (2) opcional explore público, (3) Fase 4 cuando haya foco en ingresos. Ver tablas abajo.
 
 ---
 
@@ -29,11 +31,13 @@ Frontend con datos locales; cubiertas landing, dashboard, Kanban, analytics, CV/
 | Item | Estado | Notas |
 |------|--------|--------|
 | API NestJS + MongoDB + JWT + Google OAuth | Hecho | |
-| Redis (cache / rate limit) | Opcional | En roadmap de stack; no bloquea “cerrar” fase |
-| Migración localStorage → API (módulos principales) | Hecho | Tokens + perfil en cliente; preferencias p. ej. `templatesLang` en usuario |
+| **Deploy** frontend (Vercel) + API (Render) + MongoDB Atlas | Hecho | Guía: [`DEPLOY.md`](./DEPLOY.md). Keep-alive del free tier: ping a `/api/health` (cron externo u otro servicio) |
+| Redis (cache / rate limit) | Opcional | No bloquea |
+| Migración localStorage → API (módulos principales) | Hecho | |
 | CV / cover letter en backend (p. ej. Cloudinary) | Hecho | |
 | Seed demo Preguntas / Learning vía API (`/seed`) | Hecho | |
-| Notificaciones por email | **Pendiente** | Ampliar: recordatorios, digest, alertas (además de mail de bienvenida si aplica) |
+| Email bienvenida (registro Google) | Hecho | SMTP opcional en API |
+| Notificaciones por email (recordatorios, digest, alertas) | **Pendiente** | Ampliar producto |
 | Google Calendar + eventos desde entrevistas Kanban | Hecho | |
 
 ---
@@ -88,8 +92,8 @@ Frontend con datos locales; cubiertas landing, dashboard, Kanban, analytics, CV/
 
 | Item | Estado | Notas |
 |------|--------|--------|
-| Página **Recursos** | Revisar | Hoy datos estáticos (`@/lib/resources`); migrar a API solo si querés gestión/admin |
-| README / docs desactualizados | Revisar | Alinear menciones a `store.ts` local si quedaron |
+| Página **Recursos** | Revisar | Datos estáticos (`@/lib/resources`); API solo si querés gestión/admin |
+| **README** raíz del front | Revisar | Alinear con API + deploy (evitar referencias al `store.ts` viejo) |
 
 ---
 
@@ -101,4 +105,4 @@ Frontend con datos locales; cubiertas landing, dashboard, Kanban, analytics, CV/
 
 ---
 
-*Última actualización: abril 2026 — unificado con roadmap de `devjob-tracker-app.mdc`; Fase 2 pendiente principal: email; Fase 3 opcional: explore sin login.*
+*Última actualización: abril 2026 — backoffice mock en `job-tracker-backoffice`; pendientes inmediatos: email ampliado, explore sin login opcional; Fase 4: conectar pagos + API admin.*

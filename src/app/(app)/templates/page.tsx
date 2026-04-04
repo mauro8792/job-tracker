@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { useAuth } from "@/lib/auth";
 import { Template, TemplateCategory } from "@/lib/types";
 import {
@@ -165,6 +166,7 @@ export default function TemplatesPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="templates" />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Templates de respuestas</h1>

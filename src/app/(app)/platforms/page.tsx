@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { apiStore } from "@/lib/api-store";
 import { Platform } from "@/lib/types";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { ExternalLink, Check, Clock, Circle } from "lucide-react";
 
 const STATUS_OPTIONS: { value: Platform["status"]; label: string; icon: typeof Check; color: string }[] = [
@@ -36,6 +37,7 @@ export default function PlatformsPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="platforms" />
       <div>
         <h1 className="text-2xl font-bold">Plataformas</h1>
         <p className="text-text-muted mt-1">

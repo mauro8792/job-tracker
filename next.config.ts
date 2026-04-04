@@ -6,6 +6,12 @@ import { fileURLToPath } from "node:url";
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { source: "/applications", destination: "/postulaciones", permanent: true },
+      { source: "/applications/:id", destination: "/postulaciones/:id", permanent: true },
+    ];
+  },
   turbopack: {
     root: projectRoot,
     resolveAlias: {

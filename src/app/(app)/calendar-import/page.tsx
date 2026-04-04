@@ -15,6 +15,7 @@ import { useAuth } from "@/lib/auth";
 import type { Application, GoogleCalendarListItem, InterviewType } from "@/lib/types";
 import { INTERVIEW_TYPES } from "@/lib/types";
 import { GoogleCalendarMonth } from "@/components/GoogleCalendarMonth";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 /** Select legible en tema oscuro (Windows/Chromium a veces pinta options en blanco). */
 const SELECT_CLASS =
@@ -140,7 +141,7 @@ export default function CalendarImportPage() {
         type: interviewType,
       });
       setModalEvent(null);
-      setMsg({ type: "ok", text: "Entrevista agregada a la aplicación." });
+      setMsg({ type: "ok", text: "Entrevista agregada a la postulación." });
       await refreshProfile();
       await load();
     } catch (e) {
@@ -164,6 +165,7 @@ export default function CalendarImportPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
+      <AppSectionIntro sectionId="calendar" />
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <CalendarPlus className="h-7 w-7 text-primary" />
@@ -294,8 +296,8 @@ export default function CalendarImportPage() {
                     <li className="px-4 py-8 text-center text-text-muted text-sm space-y-2">
                       <p>
                         En este período solo tenés eventos que ya vinculaste. Podés verlos en{" "}
-                        <Link href="/applications" className="text-primary hover:underline">
-                          Aplicaciones
+                        <Link href="/postulaciones" className="text-primary hover:underline">
+                          Postulaciones
                         </Link>{" "}
                         o marcar &quot;Mostrar ya vinculados&quot; arriba.
                       </p>
@@ -368,9 +370,9 @@ export default function CalendarImportPage() {
 
           {openApps.length === 0 && user?.calendarConnected ? (
             <p className="text-sm text-text-muted">
-              No tenés aplicaciones en etapas abiertas (wishlist, applied, interview, offer). Creá una en{" "}
-              <Link href="/applications" className="text-primary hover:underline">
-                Aplicaciones
+              No tenés postulaciones en etapas abiertas (wishlist, applied, interview, offer). Creá una en{" "}
+              <Link href="/postulaciones" className="text-primary hover:underline">
+                Postulaciones
               </Link>
               .
             </p>
@@ -394,7 +396,7 @@ export default function CalendarImportPage() {
 
             <div className="mt-4 space-y-3">
               <div>
-                <label className="block text-xs font-medium text-text-muted mb-1">Aplicación</label>
+                <label className="block text-xs font-medium text-text-muted mb-1">Postulación</label>
                 <select
                   value={applicationId}
                   onChange={(e) => setApplicationId(e.target.value)}

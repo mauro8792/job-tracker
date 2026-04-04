@@ -1,120 +1,99 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Check, Sparkles, ArrowRight, ArrowLeft, Save } from "lucide-react";
-
-interface PitchData {
-  name: string;
-  currentRole: string;
-  yearsExperience: string;
-  currentCompany: string;
-  mainTechnologies: string;
-  keyAchievement1: string;
-  keyAchievement2: string;
-  softSkill: string;
-  lookingFor: string;
-  whyRemote: string;
-  uniqueStrength: string;
-}
-
-const INITIAL_DATA: PitchData = {
-  name: "",
-  currentRole: "",
-  yearsExperience: "",
-  currentCompany: "",
-  mainTechnologies: "",
-  keyAchievement1: "",
-  keyAchievement2: "",
-  softSkill: "",
-  lookingFor: "",
-  whyRemote: "",
-  uniqueStrength: "",
-};
-
-function generatePitches(d: PitchData) {
-  const elevator30s = `Hi, I'm ${d.name}. I'm a ${d.currentRole} with ${d.yearsExperience} years of experience specializing in ${d.mainTechnologies}. At ${d.currentCompany}, ${d.keyAchievement1}. I'm looking for ${d.lookingFor} where I can leverage my experience to make a real impact.`;
-
-  const elevator60s = `Hi, I'm ${d.name}. I'm a ${d.currentRole} with ${d.yearsExperience} years of experience building production-grade systems with ${d.mainTechnologies}.
-
-At ${d.currentCompany}, ${d.keyAchievement1}. I also ${d.keyAchievement2}.
-
-What sets me apart is ${d.uniqueStrength}. I'm also ${d.softSkill}.
-
-I'm currently looking for ${d.lookingFor}. ${d.whyRemote} I'm excited about opportunities where I can tackle challenging technical problems and continue growing.`;
-
-  const tellMeAboutYourself = `I'm a ${d.currentRole} with ${d.yearsExperience} years of hands-on experience. I specialize in ${d.mainTechnologies}.
-
-Currently at ${d.currentCompany}, where ${d.keyAchievement1}. One of my proudest achievements was when ${d.keyAchievement2}.
-
-I'd describe myself as ${d.softSkill}, and what I bring to any team is ${d.uniqueStrength}.
-
-I'm looking for ${d.lookingFor} because ${d.whyRemote}. I'm ready for the next challenge where I can have a bigger impact on the product.`;
-
-  const whyHireMe = `You should hire me because I bring ${d.yearsExperience} years of real-world experience in ${d.mainTechnologies}, not just theoretical knowledge.
-
-At ${d.currentCompany}, I've proven I can deliver: ${d.keyAchievement1}. I also ${d.keyAchievement2}.
-
-Beyond technical skills, ${d.uniqueStrength}. I'm ${d.softSkill}, which means I can integrate quickly into your team and start contributing from day one.
-
-I'm specifically looking for ${d.lookingFor}, and I believe this role aligns perfectly with where I want to grow.`;
-
-  const linkedinSummary = `${d.currentRole} with ${d.yearsExperience}+ years of experience in ${d.mainTechnologies}. ${d.keyAchievement1} at ${d.currentCompany}. ${d.uniqueStrength}. ${d.softSkill}. Open to ${d.lookingFor}.`;
-
-  return [
-    { id: "elevator30", title: "Elevator Pitch (30 seg)", description: "Para cuando te preguntan '¿a qué te dedicás?' en un networking o al inicio de una call.", content: elevator30s },
-    { id: "elevator60", title: "Elevator Pitch (60 seg)", description: "Versión completa para cuando tenés más tiempo. Ideal para inicios de entrevista.", content: elevator60s },
-    { id: "tellme", title: "Tell me about yourself", description: "La pregunta más importante de cualquier entrevista. Usá esta estructura SIEMPRE.", content: tellMeAboutYourself },
-    { id: "whyhire", title: "Why should we hire you?", description: "Tu cierre de venta. Mostrá confianza y conectá tu experiencia con lo que buscan.", content: whyHireMe },
-    { id: "linkedin", title: "LinkedIn Summary", description: "Versión compacta para tu sección 'About' de LinkedIn.", content: linkedinSummary },
-  ];
-}
+import { Copy, Check, Sparkles, ArrowRight, ArrowLeft, Save, Languages } from "lucide-react";
+import {
+  type PitchData,
+  INITIAL_PITCH_DATA,
+  type PitchLang,
+  generatePitches,
+  buildGeneratedPitchesByLang,
+} from "@/lib/pitch-templates";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 const STEPS = [
   {
     title: "Lo básico",
     subtitle: "Empecemos con tu info principal",
     fields: [
-      { key: "name", label: "Tu nombre", placeholder: "Mauro Yini" },
-      { key: "currentRole", label: "Tu rol actual", placeholder: "Sr Backend Engineer" },
-      { key: "yearsExperience", label: "Años de experiencia", placeholder: "5" },
-      { key: "currentCompany", label: "Empresa actual o última", placeholder: "GlobalLogic" },
+      { key: "name", label: "Tu nombre", placeholder: "Nombre y apellido" },
+      { key: "currentRole", label: "Tu rol actual", placeholder: "Ej.: Senior Software Engineer" },
+      { key: "yearsExperience", label: "Años de experiencia", placeholder: "Ej.: 5" },
+      { key: "currentCompany", label: "Empresa actual o última", placeholder: "Nombre del empleador actual o más reciente" },
     ],
   },
   {
-    title: "Tus armas",
+    title: "Tus skills",
     subtitle: "¿Con qué tecnologías trabajás?",
     fields: [
-      { key: "mainTechnologies", label: "Tecnologías principales", placeholder: "Node.js, NestJS, TypeScript, MongoDB, Docker" },
+      {
+        key: "mainTechnologies",
+        label: "Tecnologías principales",
+        placeholder: "Ej.: tecnologías separadas por comas",
+      },
     ],
   },
   {
     title: "Tus logros",
     subtitle: "Lo que te hace destacar. Pensá en resultados concretos.",
     fields: [
-      { key: "keyAchievement1", label: "Logro principal (qué hiciste y qué impacto tuvo)", placeholder: "I designed and built REST APIs serving 10K+ daily users for a property management system" },
-      { key: "keyAchievement2", label: "Segundo logro (otro ejemplo concreto)", placeholder: "built a real-time dashboard with Socket.IO and Redis that improved system availability by 40%" },
+      {
+        key: "keyAchievement1",
+        label: "Logro principal (qué hiciste y qué impacto tuvo)",
+        placeholder:
+          "Ej.: lideré el rediseño de la API principal y bajamos el tiempo de respuesta un 30%",
+      },
+      {
+        key: "keyAchievement2",
+        label: "Segundo logro (otro ejemplo concreto)",
+        placeholder:
+          "Ej.: automatizamos despliegues y pasamos de releases semanales a diarios",
+      },
     ],
   },
   {
     title: "Tu diferencial",
     subtitle: "Lo que Yari llama 'venderte' - ¿qué te hace único?",
     fields: [
-      { key: "uniqueStrength", label: "Tu fortaleza única (¿qué te diferencia de otros devs?)", placeholder: "my ability to take ownership of problems end-to-end, from architecture to deployment" },
-      { key: "softSkill", label: "Soft skill que te define", placeholder: "a strong communicator who thrives in collaborative, remote teams" },
+      {
+        key: "uniqueStrength",
+        label: "Tu fortaleza única (¿qué te diferencia de otros devs?)",
+        placeholder: "Ej.: me encargo del problema de punta a punta, de diseño a producción",
+      },
+      {
+        key: "softSkill",
+        label: "Soft skill que te define",
+        placeholder: "Ej.: comunicación clara en equipos remotos y documentación útil",
+      },
     ],
   },
   {
     title: "¿Qué buscás?",
     subtitle: "Cerrá con claridad sobre lo que querés",
     fields: [
-      { key: "lookingFor", label: "¿Qué tipo de oportunidad buscás?", placeholder: "a remote backend or full-stack position at a product company where I can tackle complex problems" },
-      { key: "whyRemote", label: "¿Por qué remoto? (motivación)", placeholder: "I've worked in distributed teams for years and I'm most productive in async-first environments." },
+      {
+        key: "lookingFor",
+        label: "¿Qué tipo de oportunidad buscás?",
+        placeholder:
+          "Ej.: rol remoto backend o full-stack en producto, con problemas técnicos desafiantes",
+      },
+      {
+        key: "whyRemote",
+        label: "¿Por qué remoto? (motivación)",
+        placeholder:
+          "Ej.: prefiero equipos distribuidos y trabajo asíncrono para concentrarme mejor",
+      },
     ],
   },
 ];
 
+function isPitchLang(v: unknown): v is PitchLang {
+  return v === "es" || v === "en";
+}
+
 export default function PitchBuilderPage() {
-  const [data, setData] = useState<PitchData>(INITIAL_DATA);
+  const [data, setData] = useState<PitchData>(INITIAL_PITCH_DATA);
+  const [lang, setLang] = useState<PitchLang>("es");
   const [step, setStep] = useState(0);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
@@ -123,22 +102,40 @@ export default function PitchBuilderPage() {
 
   useEffect(() => {
     import("@/lib/api-store").then(({ apiStore }) => {
-      apiStore.getPitch().then((d: PitchData) => {
-        const merged = { ...INITIAL_DATA };
-        for (const key of Object.keys(merged) as (keyof PitchData)[]) {
-          if (d[key]) merged[key] = d[key];
-        }
-        setData(merged);
-        setLoaded(true);
-      }).catch(() => setLoaded(true));
+      apiStore
+        .getPitch()
+        .then((d: PitchData & { preferredLanguage?: string }) => {
+          const merged = { ...INITIAL_PITCH_DATA };
+          for (const key of Object.keys(merged) as (keyof PitchData)[]) {
+            const v = d[key];
+            if (typeof v === "string" && v) merged[key] = v;
+          }
+          setData(merged);
+          if (isPitchLang(d.preferredLanguage)) setLang(d.preferredLanguage);
+          setLoaded(true);
+        })
+        .catch(() => setLoaded(true));
     });
   }, []);
 
-  const save = async () => {
+  const persistPayload = (form: PitchData, language: PitchLang) => ({
+    ...form,
+    preferredLanguage: language,
+    generatedPitchesByLang: buildGeneratedPitchesByLang(form),
+  });
+
+  const save = async (language?: PitchLang) => {
+    const l = language ?? lang;
     const { apiStore } = await import("@/lib/api-store");
-    await apiStore.savePitch(data);
+    await apiStore.savePitch(persistPayload(data, l));
     setSavedMsg(true);
     setTimeout(() => setSavedMsg(false), 2000);
+  };
+
+  const handleLangChange = async (next: PitchLang) => {
+    setLang(next);
+    const { apiStore } = await import("@/lib/api-store");
+    await apiStore.savePitch(persistPayload(data, next));
   };
 
   const handleChange = (key: string, value: string) => {
@@ -151,13 +148,9 @@ export default function PitchBuilderPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const isStepComplete = STEPS[step]?.fields.every(
-    (f) => data[f.key as keyof PitchData].trim() !== ""
-  );
-
   const allComplete = Object.values(data).every((v) => v.trim() !== "");
 
-  const pitches = generatePitches(data);
+  const pitches = generatePitches(data, lang);
   const hasGenerated = loaded && allComplete && !editing;
 
   if (hasGenerated) {
@@ -165,21 +158,60 @@ export default function PitchBuilderPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">Tus speeches listos</h1>
-            <p className="text-text-muted mt-1">Copiá, personalizá y practicá frente al espejo</p>
+            <h1 className="text-2xl font-bold">Tu presentación, lista para usar</h1>
+            <p className="text-text-muted mt-1">
+              Copiá, ajustá y practicá en voz alta. Los textos (ES y EN) quedan guardados en tu cuenta al usar
+              Guardar.
+            </p>
           </div>
-          <button
-            onClick={() => { setEditing(true); setStep(0); }}
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text hover:border-primary/30 transition-colors"
-          >
-            <Sparkles className="h-4 w-4" /> Editar datos
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex rounded-lg border border-border p-0.5 bg-surface-light">
+              <button
+                type="button"
+                onClick={() => void handleLangChange("es")}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  lang === "es" ? "bg-primary text-white" : "text-text-muted hover:text-text"
+                }`}
+              >
+                ES
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleLangChange("en")}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  lang === "en" ? "bg-primary text-white" : "text-text-muted hover:text-text"
+                }`}
+              >
+                EN
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                setEditing(true);
+                setStep(0);
+              }}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text hover:border-primary/30 transition-colors"
+            >
+              <Sparkles className="h-4 w-4" /> Editar datos
+            </button>
+          </div>
         </div>
 
         <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <p className="text-sm text-text-muted flex items-start gap-2">
+            <Languages className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <span>
+              <strong>Tip:</strong> El contenido se arma con tus respuestas y plantillas fijas. Si más adelante
+              sumamos IA, el texto refinado también se podrá guardar igual en el servidor.
+            </span>
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface p-4">
           <p className="text-sm text-text-muted">
             <Sparkles className="h-4 w-4 text-primary inline mr-1.5" />
-            <strong>Tip de Yari:</strong> No memorices palabra por palabra. Interiorizá la estructura y practicá contándolo natural, como si hablaras con un amigo. La clave es sonar genuino, no robótico.
+            <strong>Tip de Yari:</strong> No memorices palabra por palabra. Interiorizá la estructura y practicá
+            contándolo natural, como si hablaras con un amigo. La clave es sonar genuino, no robótico.
           </p>
         </div>
 
@@ -201,9 +233,13 @@ export default function PitchBuilderPage() {
                   className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-text-muted hover:text-text hover:border-primary/30"
                 >
                   {copiedId === pitch.id ? (
-                    <><Check className="h-4 w-4 text-emerald-400" /> Copiado!</>
+                    <>
+                      <Check className="h-4 w-4 text-emerald-400" /> Copiado!
+                    </>
                   ) : (
-                    <><Copy className="h-4 w-4" /> Copiar</>
+                    <>
+                      <Copy className="h-4 w-4" /> Copiar
+                    </>
                   )}
                 </button>
               </div>
@@ -212,12 +248,12 @@ export default function PitchBuilderPage() {
         </div>
 
         <div className="rounded-xl border border-border bg-surface p-5">
-          <h3 className="font-semibold mb-2">Cómo practicar tu pitch</h3>
+          <h3 className="font-semibold mb-2">Cómo practicar tu presentación</h3>
           <ol className="space-y-2 text-sm text-text-muted list-decimal list-inside">
-            <li>Leé el pitch en voz alta 3 veces hasta que fluya natural</li>
+            <li>Leé el texto en voz alta varias veces hasta que suene natural</li>
             <li>Grabate con el celular y escuchate (sí, da cringe, pero funciona)</li>
             <li>Practicá con un amigo o en Pramp con otro dev</li>
-            <li>Adaptá según la empresa: cambiá el "looking for" según el puesto</li>
+            <li>Adaptá según la empresa: cambiá el &quot;looking for&quot; según el puesto</li>
             <li>Cronometrá: el de 30 seg debería durar ~30 seg, el de 60 seg ~1 min</li>
           </ol>
         </div>
@@ -227,11 +263,13 @@ export default function PitchBuilderPage() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
+      <AppSectionIntro sectionId="pitch" />
       <div className="text-center">
         <Sparkles className="h-10 w-10 text-primary mx-auto mb-3" />
-        <h1 className="text-2xl font-bold">Pitch Builder</h1>
+        <h1 className="text-2xl font-bold">Tu presentación personal</h1>
         <p className="text-text-muted mt-1">
-          Armá tu speech de venta en 5 pasos. Completá tu info y te genero los textos listos para usar.
+          En 5 pasos armás lo que contarías en una entrevista o un café con un recruiter: con tus datos generamos
+          textos listos (español e inglés) para copiar y practicar.
         </p>
       </div>
 
@@ -240,12 +278,15 @@ export default function PitchBuilderPage() {
         {STEPS.map((s, i) => (
           <div key={i} className="flex-1">
             <button
+              type="button"
               onClick={() => setStep(i)}
               className={`w-full h-1.5 rounded-full transition-colors ${
                 i < step ? "bg-emerald-500" : i === step ? "bg-primary" : "bg-surface-light"
               }`}
             />
-            <p className={`text-[10px] mt-1 text-center ${i === step ? "text-primary" : "text-text-muted"}`}>
+            <p
+              className={`text-[10px] mt-1 text-center ${i === step ? "text-primary" : "text-text-muted"}`}
+            >
               {s.title}
             </p>
           </div>
@@ -285,6 +326,7 @@ export default function PitchBuilderPage() {
       {/* Navigation */}
       <div className="flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setStep(Math.max(0, step - 1))}
           disabled={step === 0}
           className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text disabled:opacity-30 disabled:cursor-not-allowed"
@@ -293,7 +335,8 @@ export default function PitchBuilderPage() {
         </button>
 
         <button
-          onClick={save}
+          type="button"
+          onClick={() => void save()}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-muted hover:text-text hover:border-primary/30"
         >
           {savedMsg ? <Check className="h-4 w-4 text-emerald-400" /> : <Save className="h-4 w-4" />}
@@ -302,6 +345,7 @@ export default function PitchBuilderPage() {
 
         {step < STEPS.length - 1 ? (
           <button
+            type="button"
             onClick={() => setStep(step + 1)}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
           >
@@ -309,11 +353,14 @@ export default function PitchBuilderPage() {
           </button>
         ) : (
           <button
-            onClick={() => { save(); setEditing(false); }}
+            type="button"
+            onClick={() => {
+              void save().then(() => setEditing(false));
+            }}
             disabled={!allComplete}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Sparkles className="h-4 w-4" /> {allComplete ? "Ver mis speeches" : "Generar mis speeches"}
+            <Sparkles className="h-4 w-4" /> {allComplete ? "Ver mis textos" : "Generar mis textos"}
           </button>
         )}
       </div>

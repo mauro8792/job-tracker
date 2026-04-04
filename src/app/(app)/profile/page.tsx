@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { apiStore } from "@/lib/api-store";
+import { hasProLikeAccess } from "@/lib/plan-access";
 import {
   User,
   Crown,
@@ -61,7 +62,7 @@ export default function ProfilePage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("calendar_connected") === "1") {
       void refreshProfile();
-      setCalendarMsg("Google Calendar conectado. Ya podés agregar entrevistas desde cada aplicación.");
+      setCalendarMsg("Google Calendar conectado. Ya podés agregar entrevistas desde cada postulación.");
       window.history.replaceState({}, "", "/profile");
     }
     const cerr = params.get("calendar_error");
@@ -122,6 +123,8 @@ export default function ProfilePage() {
     ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
     : 0;
 
+  const proLike = hasProLikeAccess(user);
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
@@ -166,7 +169,7 @@ export default function ProfilePage() {
           <h3 className="text-lg font-semibold">Perfil público</h3>
         </div>
         <p className="text-sm text-text-muted">
-          Mostrá una página con tu nombre, foto de Google y métricas agregadas de tu tablero (aplicaciones,
+          Mostrá una página con tu nombre, foto de Google y métricas agregadas de tu tablero (postulaciones,
           entrevistas, ofertas y contrataciones). No se muestran empresas ni roles.
         </p>
         <label className="flex items-center gap-2 cursor-pointer">
@@ -303,6 +306,30 @@ export default function ProfilePage() {
 
         <p className="text-sm text-text-muted">{plan.description}</p>
 
+        {user.hasActiveBonusAccess && user.testingAccessUntil && (
+          <div className="rounded-lg bg-indigo-500/5 border border-indigo-500/20 p-4">
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-5 w-5 text-indigo-400 shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-indigo-300">
+                  Acceso extendido (bonificación)
+                </p>
+                <p className="text-xs text-text-muted mt-0.5">
+                  Vigente hasta{" "}
+                  {new Date(user.testingAccessUntil).toLocaleDateString("es-AR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                  {(user.adminCredits ?? 0) > 0
+                    ? ` · Créditos: ${user.adminCredits}`
+                    : ""}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {user.plan === "trial" && trialDaysLeft > 0 && (
           <div className="rounded-lg bg-amber-400/5 border border-amber-400/20 p-4">
             <div className="flex items-center gap-3">
@@ -319,14 +346,14 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {user.plan === "trial" && trialDaysLeft === 0 && (
+        {user.plan === "trial" && trialDaysLeft === 0 && !user.hasActiveBonusAccess && (
           <div className="rounded-lg bg-red-400/5 border border-red-400/20 p-4">
             <p className="text-sm font-medium text-red-400">Tu período de prueba expiró</p>
             <p className="text-xs text-text-muted mt-0.5">Pasá a Pro para seguir usando todas las features.</p>
           </div>
         )}
 
-        {user.plan !== "pro" && (
+        {!proLike && (
           <button
             disabled
             className="inline-flex items-center gap-2 rounded-lg bg-primary/20 px-4 py-2.5 text-sm font-medium text-primary cursor-not-allowed opacity-60"
@@ -348,10 +375,10 @@ export default function ProfilePage() {
           {[
             { name: "Dashboard + Kanban", free: true, pro: true },
             { name: "Checklist diaria", free: true, pro: true },
-            { name: "Hasta 10 aplicaciones", free: true, pro: false },
-            { name: "Aplicaciones ilimitadas", free: false, pro: true },
+            { name: "Hasta 10 postulaciones", free: true, pro: false },
+            { name: "Postulaciones ilimitadas", free: false, pro: true },
             { name: "Analytics avanzados", free: false, pro: true },
-            { name: "Pitch Builder", free: false, pro: true },
+            { name: "Presentación personal (entrevistas)", free: false, pro: true },
             { name: "Learning Paths", free: false, pro: true },
             { name: "Banco de preguntas", free: false, pro: true },
             { name: "Comunidad (próximamente)", free: false, pro: true },

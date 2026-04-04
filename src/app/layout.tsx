@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: "DevJobTracker - Organizá tu búsqueda laboral",
-  description: "App para desarrolladores de LATAM que buscan trabajo remoto. Centralizá plataformas, aplicaciones, preparación de entrevistas y más.",
+  description: "App para desarrolladores de LATAM que buscan trabajo remoto. Centralizá plataformas, postulaciones, preparación de entrevistas y más.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

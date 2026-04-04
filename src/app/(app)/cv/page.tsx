@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 const STORAGE_KEY = "djt_cv_file";
 const CL_STORAGE_KEY = "djt_cover_letter";
@@ -485,6 +486,7 @@ export default function CVPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="cv" />
       <div>
         <h1 className="text-2xl font-bold">Mi CV & Cover Letter</h1>
         <p className="text-text-muted mt-1">
@@ -889,7 +891,7 @@ export default function CVPage() {
 
           <div className="rounded-lg bg-surface-light p-3">
             <p className="text-xs text-text-muted">
-              <span className="font-medium text-text">Tip:</span> Personalizá tu cover letter para cada aplicación.
+              <span className="font-medium text-text">Tip:</span> Personalizá tu cover letter para cada postulación.
               Mencioná la empresa, el puesto y por qué sos un buen fit.
             </p>
           </div>

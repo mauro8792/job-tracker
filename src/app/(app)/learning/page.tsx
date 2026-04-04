@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { LearningPath } from "@/lib/types";
 import {
   Plus, Trash2, ExternalLink, CheckCircle2, Circle,
@@ -174,6 +175,7 @@ export default function LearningPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="learning" />
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text">Learning Path</h1>

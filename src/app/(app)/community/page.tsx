@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { useAuth } from "@/lib/auth";
 import { ExploreLearningPath, ExploreQuestion, CommunityComment } from "@/lib/types";
 import {
@@ -193,6 +194,7 @@ export default function CommunityPage() {
 
   return (
     <div className="space-y-6 max-w-4xl">
+      <AppSectionIntro sectionId="community" />
       <div>
         <div className="flex items-center gap-2 text-primary mb-1">
           <Users className="h-6 w-6" />

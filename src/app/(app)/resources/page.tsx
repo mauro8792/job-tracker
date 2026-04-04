@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { RESOURCES, RESOURCE_CATEGORIES, ResourceCategory } from "@/lib/resources";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { ExternalLink, Star, Zap } from "lucide-react";
 
 const DIFFICULTY_BADGE: Record<string, string> = {
@@ -28,6 +29,7 @@ export default function ResourcesPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="resources" />
       <div>
         <h1 className="text-2xl font-bold">Recursos para prepararte</h1>
         <p className="text-text-muted mt-1">

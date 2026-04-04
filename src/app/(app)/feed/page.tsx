@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { useAuth } from "@/lib/auth";
 import { FeedPost, CommunityComment } from "@/lib/types";
 import {
@@ -199,6 +200,7 @@ export default function FeedPage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
+      <AppSectionIntro sectionId="feed" />
       <div>
         <div className="flex items-center gap-2 text-primary mb-1">
           <Newspaper className="h-6 w-6" />

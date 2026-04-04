@@ -11,6 +11,16 @@ interface User {
   avatar: string;
   plan: string;
   trialEndsAt?: string | null;
+  /** Renovación Pro (cuando exista facturación). */
+  subscriptionRenewsAt?: string | null;
+  /** Reset de cuotas free (opcional). */
+  freeQuotaResetsAt?: string | null;
+  /** Créditos otorgados desde backoffice. */
+  adminCredits?: number;
+  /** Fin de ventana de acceso extendido (bonificación). */
+  testingAccessUntil?: string | null;
+  /** true si `testingAccessUntil` está en el futuro. */
+  hasActiveBonusAccess?: boolean;
   publicProfileEnabled?: boolean;
   publicSlug?: string | null;
   publicBio?: string;

@@ -5,6 +5,7 @@ import { apiStore } from "@/lib/api-store";
 import { Application, Platform, ChecklistItem, INTERVIEW_TYPES, InterviewEntry } from "@/lib/types";
 import { Briefcase, Globe, CheckSquare, TrendingUp, ExternalLink, Calendar, Clock, Timer, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 interface UpcomingInterview {
   interview: InterviewEntry;
@@ -65,7 +66,7 @@ export default function DashboardPage() {
   const upcomingInterviews = getUpcomingInterviews(apps);
 
   const stats = [
-    { label: "Aplicaciones", value: apps.length, icon: Briefcase, color: "text-blue-400" },
+    { label: "Postulaciones", value: apps.length, icon: Briefcase, color: "text-blue-400" },
     { label: "Plataformas activas", value: `${completePlatforms}/${platforms.length}`, icon: Globe, color: "text-emerald-400" },
     { label: "Checklist hoy", value: `${todayCompleted}/${checklist.length}`, icon: CheckSquare, color: "text-amber-400" },
     { label: "Entrevistas activas", value: interviewCount, icon: TrendingUp, color: "text-purple-400" },
@@ -73,6 +74,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="dashboard" />
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-text-muted mt-1">Resumen de tu búsqueda laboral</p>
@@ -116,7 +118,7 @@ export default function DashboardPage() {
               return (
                 <Link
                   key={interview.id}
-                  href={`/applications/${app.id}`}
+                  href={`/postulaciones/${app.id}`}
                   className="flex items-center gap-4 rounded-lg border border-border bg-surface-light p-3 hover:border-primary/40 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
@@ -199,17 +201,17 @@ export default function DashboardPage() {
 
       <div className="rounded-xl border border-border bg-surface p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Aplicaciones recientes</h2>
-          <Link href="/applications" className="text-sm text-primary hover:underline">Ver kanban</Link>
+          <h2 className="text-lg font-semibold">Postulaciones recientes</h2>
+          <Link href="/postulaciones" className="text-sm text-primary hover:underline">Ver kanban</Link>
         </div>
         {apps.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-text-muted mb-3">No tenés aplicaciones todavía</p>
+            <p className="text-text-muted mb-3">No tenés postulaciones todavía</p>
             <Link
-              href="/applications"
+              href="/postulaciones"
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
             >
-              Agregar primera aplicación
+              Agregar primera postulación
             </Link>
           </div>
         ) : (
@@ -228,7 +230,7 @@ export default function DashboardPage() {
                 {apps.slice(0, 5).map((app) => (
                   <tr key={app.id} className="border-b border-border/50">
                     <td className="py-2.5">
-                      <Link href={`/applications/${app.id}`} className="font-medium hover:text-primary transition-colors">
+                      <Link href={`/postulaciones/${app.id}`} className="font-medium hover:text-primary transition-colors">
                         {app.company}
                       </Link>
                     </td>

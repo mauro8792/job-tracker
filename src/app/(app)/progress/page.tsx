@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { apiStore } from "@/lib/api-store";
 import { WeeklyProgress } from "@/lib/types";
 import { Plus, X, TrendingUp, Brain, Briefcase, Globe2, MessageSquare, Target } from "lucide-react";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 function getWeekStart(date: Date): string {
   const d = new Date(date);
@@ -106,6 +107,7 @@ export default function ProgressPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="progress" />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Progreso semanal</h1>
@@ -145,7 +147,7 @@ export default function ProgressPage() {
           current={currentWeekData.applicationsSubmitted}
           goal={WEEKLY_GOALS.applicationsSubmitted}
           color="text-blue-400"
-          label="Aplicaciones enviadas"
+          label="Postulaciones enviadas"
           icon={Briefcase}
           unit="apps"
         />
@@ -170,7 +172,7 @@ export default function ProgressPage() {
       <div className="grid gap-4 sm:grid-cols-4">
         {[
           { label: "Total algoritmos", value: totalProblems, color: "text-purple-400" },
-          { label: "Total aplicaciones", value: totalApps, color: "text-blue-400" },
+          { label: "Total postulaciones", value: totalApps, color: "text-blue-400" },
           { label: "Total min inglés", value: totalEnglish, color: "text-emerald-400" },
           { label: "Total entrevistas", value: totalInterviews, color: "text-amber-400" },
         ].map((s) => (
@@ -204,7 +206,7 @@ export default function ProgressPage() {
               <div>
                 <label className="flex items-center gap-2 text-sm text-text-muted mb-1">
                   <Briefcase className="h-4 w-4 text-blue-400" />
-                  Aplicaciones enviadas
+                  Postulaciones enviadas
                 </label>
                 <input name="applications" type="number" min={0} defaultValue={currentWeekData.applicationsSubmitted} className="w-full rounded-lg border border-border bg-surface-light px-3 py-2 text-sm text-text focus:border-primary focus:outline-none" />
               </div>
@@ -248,7 +250,7 @@ export default function ProgressPage() {
                     <Brain className="h-4 w-4 text-purple-400 sm:hidden inline" />
                   </th>
                   <th className="px-4 py-3 font-medium text-text-muted text-center">
-                    <span className="hidden sm:inline">Aplicaciones</span>
+                    <span className="hidden sm:inline">Postulaciones</span>
                     <Briefcase className="h-4 w-4 text-blue-400 sm:hidden inline" />
                   </th>
                   <th className="px-4 py-3 font-medium text-text-muted text-center">
@@ -300,7 +302,7 @@ export default function ProgressPage() {
           <TrendingUp className="h-12 w-12 text-text-muted mx-auto mb-3" />
           <p className="text-text-muted font-medium mb-1">No hay registros todavía</p>
           <p className="text-sm text-text-muted mb-4">
-            Al final de cada semana, registrá cuántos problemas resolviste, aplicaciones mandaste, minutos de inglés practicaste y entrevistas tuviste.
+            Al final de cada semana, registrá cuántos problemas resolviste, postulaciones mandaste, minutos de inglés practicaste y entrevistas tuviste.
           </p>
           <button
             onClick={() => setShowForm(true)}

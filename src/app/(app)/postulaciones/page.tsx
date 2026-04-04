@@ -5,6 +5,7 @@ import { apiStore } from "@/lib/api-store";
 import { Application, APPLICATION_COLUMNS, ApplicationStatus } from "@/lib/types";
 import { Plus, Trash2, ExternalLink, X, ChevronRight, Star, PartyPopper } from "lucide-react";
 import Link from "next/link";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 export default function ApplicationsPage() {
   const [apps, setApps] = useState<Application[]>([]);
@@ -86,9 +87,10 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="postulaciones" />
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Aplicaciones</h1>
+          <h1 className="text-2xl font-bold">Postulaciones</h1>
           <p className="text-text-muted mt-1">Arrastrá las tarjetas para cambiar de estado</p>
         </div>
         <button
@@ -96,7 +98,7 @@ export default function ApplicationsPage() {
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
         >
           <Plus className="h-4 w-4" />
-          Nueva aplicación
+          Nueva postulación
         </button>
       </div>
 
@@ -104,7 +106,7 @@ export default function ApplicationsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-surface p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Nueva aplicación</h2>
+              <h2 className="text-lg font-semibold">Nueva postulación</h2>
               <button onClick={() => setShowForm(false)} className="text-text-muted hover:text-text">
                 <X className="h-5 w-5" />
               </button>
@@ -268,7 +270,7 @@ export default function ApplicationsPage() {
                     }`}
                   >
                     <div className="flex items-start justify-between">
-                      <Link href={`/applications/${app.id}`} className="flex-1">
+                      <Link href={`/postulaciones/${app.id}`} className="flex-1">
                         <p className="font-medium text-sm hover:text-primary transition-colors">{app.company}</p>
                         <p className="text-xs text-text-muted mt-0.5">{app.role}</p>
                       </Link>
@@ -288,7 +290,7 @@ export default function ApplicationsPage() {
                       <span className="text-[10px] text-text-muted">{app.platform}</span>
                       <div className="flex items-center gap-1">
                         <span className="text-[10px] text-text-muted">{new Date(app.appliedDate).toLocaleDateString()}</span>
-                        <Link href={`/applications/${app.id}`} className="text-text-muted hover:text-primary">
+                        <Link href={`/postulaciones/${app.id}`} className="text-text-muted hover:text-primary">
                           <ChevronRight className="h-3 w-3" />
                         </Link>
                       </div>

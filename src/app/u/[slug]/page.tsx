@@ -100,12 +100,12 @@ export default function PublicProfilePage() {
                 Progreso en la búsqueda
               </h2>
               <p className="text-xs text-text-muted mb-4">
-                Totales desde tu tablero de aplicaciones (sin mostrar empresas ni roles).
+                Totales desde tu tablero de postulaciones (sin mostrar empresas ni roles).
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <StatCard
                   icon={Briefcase}
-                  label="Aplicaciones"
+                  label="Postulaciones"
                   value={data.stats.applicationsTotal}
                 />
                 <StatCard icon={Target} label="En entrevista" value={data.stats.interviewsStageCount} />

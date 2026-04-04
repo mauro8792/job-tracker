@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { apiStore } from "@/lib/api-store";
 import { ChecklistItem } from "@/lib/types";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import {
   CheckCircle2,
   Circle,
@@ -20,14 +21,14 @@ import {
 const CATEGORY_META: Record<string, { label: string; icon: typeof Brain; color: string }> = {
   algorithms: { label: "Algoritmos", icon: Brain, color: "text-purple-400" },
   english: { label: "Inglés", icon: Globe2, color: "text-blue-400" },
-  applications: { label: "Aplicaciones", icon: Briefcase, color: "text-emerald-400" },
+  applications: { label: "Postulaciones", icon: Briefcase, color: "text-emerald-400" },
   other: { label: "Otro", icon: Star, color: "text-amber-400" },
 };
 
 const CATEGORIES = [
   { value: "algorithms", label: "Algoritmos" },
   { value: "english", label: "Inglés" },
-  { value: "applications", label: "Aplicaciones" },
+  { value: "applications", label: "Postulaciones" },
   { value: "other", label: "Otro" },
 ];
 
@@ -100,6 +101,7 @@ export default function ChecklistPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="checklist" />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Checklist diaria</h1>

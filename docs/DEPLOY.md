@@ -29,8 +29,11 @@ Variable para Render: `MONGODB_URI=<esa URI>`.
 1. **New** → **Web Service** → conectar el repo `job-tracker-api`.
 2. Configuración típica:
    - **Runtime**: Node
-   - **Build command**: `npm ci && npm run build` (o `npm install && npm run build`)
+   - **Build command** (importante si ves `nest: not found`):  
+     `npm ci --include=dev && npm run build`  
+     El flag `--include=dev` fuerza instalar devDependencies aunque `NODE_ENV=production` (herramientas de compilación). El repo incluye `render.yaml` con este comando; si no usás Blueprint, copiá el mismo comando en **Settings → Build Command**.
    - **Start command**: `npm run start:prod`
+   - Asegurate de haber hecho **push** de `package.json` y `package-lock.json` tras mover `@nestjs/cli` a `dependencies`.
    - **Plan**: Free (el servicio “duerme” tras inactividad; primer request puede tardar ~1 min).
 3. **Environment** (ver también `.env.example` en la API):
 
@@ -57,6 +60,22 @@ Variable para Render: `MONGODB_URI=<esa URI>`.
 
 `https://TU-SERVICIO.onrender.com/api`
 
+### Mantener la API despierta (plan Free)
+
+En el plan gratuito, Render **suspende** el servicio tras unos minutos sin requests; el primer acceso después muestra “despertando” y puede **romper OAuth** (timeouts) o parecer error a los usuarios.
+
+**Opciones (elegí una):**
+
+1. **Servicio externo (más simple):** [cron-job.org](https://cron-job.org), [UptimeRobot](https://uptimerobot.com) u otro monitor HTTP gratuito. URL a pinguear:  
+   `GET https://TU-SERVICIO.onrender.com/api/health`  
+   Intervalo: **cada 10–14 minutos** (antes de que duerma del todo).
+
+2. **GitHub Actions** (repo `job-tracker-api`): existe `.github/workflows/render-keepalive.yml`. En el repo → **Settings → Secrets and variables → Actions** → creá el secret **`RENDER_HEALTH_URL`** con el valor  
+   `https://TU-SERVICIO.onrender.com/api/health`  
+   El workflow corre cada 10 minutos (UTC).
+
+3. **Solución “de verdad”:** subir de plan en Render (servicio siempre activo).
+
 ---
 
 ## 3. Frontend en Vercel
@@ -67,7 +86,7 @@ Variable para Render: `MONGODB_URI=<esa URI>`.
 
 | Variable | Valor |
 |----------|--------|
-| `NEXT_PUBLIC_API_URL` | `https://TU-SERVICIO.onrender.com/api` |
+| `NEXT_PUBLIC_API_URL` | `https://TU-SERVICIO.onrender.com/api` (si ponés solo el host sin `/api`, el front lo corrige; lo recomendable es incluir `/api` explícito) |
 
 4. Deploy. La URL será algo como `https://devjob-tracker-xxx.vercel.app` (o tu dominio).
 
@@ -123,7 +142,8 @@ Variable para Render: `MONGODB_URI=<esa URI>`.
 | Google `redirect_uri_mismatch` | URI en Google Console = misma que `GOOGLE_CALLBACK_URL` / Calendar. |
 | 401 / sesión | `NEXT_PUBLIC_API_URL` debe terminar en `/api` como en local. |
 | Mongo timeout | Network Access en Atlas; usuario/clave en URI. |
-| Servicio Render frío | Free tier: primer hit lento; considerar plan de pago después. |
+| Servicio Render frío / pantalla “Waking up” | Free tier: usar ping a `/api/health` cada ~10 min (cron externo o GitHub Actions) o plan de pago. |
+| `E11000 duplicate key ... publicSlug: null` al registrar usuarios | Índice viejo en MongoDB. En Atlas → **Collections** → `users` → índices: eliminar **`publicSlug_1`** si existe y redeploy (Mongoose recrea el índice parcial correcto). Opcional: `updateMany` con `$unset` de `publicSlug` donde sea `null` para alinear datos. |
 
 ---
 

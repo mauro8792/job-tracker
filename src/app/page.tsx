@@ -9,9 +9,9 @@ import { getGoogleLoginUrl } from "@/lib/api";
 
 const FEATURES = [
   { icon: Globe, title: "Plataformas centralizadas", description: "Gestioná tu presencia en LinkedIn, Turing, GetonBoard, Wellfound, Arc.dev y más desde un solo lugar." },
-  { icon: Kanban, title: "Kanban de aplicaciones", description: "Seguí el estado de cada aplicación: Wishlist → Applied → Interview → Offer." },
+  { icon: Kanban, title: "Kanban de postulaciones", description: "Seguí el estado de cada postulación: Wishlist → Applied → Interview → Offer." },
   { icon: CheckSquare, title: "Checklist diaria", description: "No te olvides de practicar algoritmos, revisar alertas y practicar inglés todos los días." },
-  { icon: BarChart3, title: "Progreso semanal", description: "Visualizá cuántos problemas resolviste, cuántas aplicaciones mandaste y más." },
+  { icon: BarChart3, title: "Progreso semanal", description: "Visualizá cuántos problemas resolviste, cuántas postulaciones mandaste y más." },
   { icon: FileText, title: "Templates de respuestas", description: "Templates listos para behavioral interviews, motivación y preguntas técnicas." },
   { icon: Rocket, title: "7 días gratis", description: "Probá todas las features sin compromiso. Después elegí el plan que mejor te sirva." },
 ];
@@ -72,7 +72,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg text-text-muted leading-relaxed">
-          Centralizá tus plataformas, trackeá tus aplicaciones, preparate para entrevistas
+          Centralizá tus plataformas, trackeá tus postulaciones, preparate para entrevistas
           y medí tu progreso. Todo en un solo lugar.
         </p>
 

@@ -7,7 +7,7 @@ alwaysApply: false
 
 ## Visión del producto
 
-App web para desarrolladores de LATAM que buscan trabajo remoto en USA/Europa. Centraliza gestión de plataformas, Kanban de aplicaciones, preparación para entrevistas, CV, comunidad y progreso en un solo lugar.
+App web para desarrolladores de LATAM que buscan trabajo remoto en USA/Europa. Centraliza gestión de plataformas, Kanban de postulaciones (`/postulaciones`), preparación para entrevistas, CV, comunidad y progreso en un solo lugar.
 
 ## Público objetivo
 

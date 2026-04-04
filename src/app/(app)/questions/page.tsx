@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { apiStore } from "@/lib/api-store";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 import { Question } from "@/lib/types";
 import { Plus, Search, ChevronDown, ChevronUp, Pencil, Trash2, Tag, X, Filter } from "lucide-react";
 
@@ -116,6 +117,7 @@ export default function QuestionsPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="questions" />
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text">Banco de Preguntas</h1>

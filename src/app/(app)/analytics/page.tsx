@@ -12,6 +12,7 @@ import {
   TrendingUp, Target, Users, Trophy, Briefcase, Calendar,
   CheckCircle2, XCircle, ArrowRight, Zap, Sparkles, Lightbulb,
 } from "lucide-react";
+import { AppSectionIntro } from "@/components/SectionIntroModal";
 
 const COLORS = {
   primary: "#7c3aed",
@@ -85,7 +86,7 @@ function buildInsight(args: {
   if (totalApps < 3) {
     return {
       title: "Todavía estás armando tu muestra",
-      body: "Con menos de 3 aplicaciones los porcentajes del embudo no son representativos. Objetivo: sumar postulaciones y registrar cada entrevista para ver tendencias reales en unas semanas.",
+      body: "Con menos de 3 postulaciones los porcentajes del embudo no son representativos. Objetivo: sumar volumen y registrar cada entrevista para ver tendencias reales en unas semanas.",
       tone: "amber",
     };
   }
@@ -93,7 +94,7 @@ function buildInsight(args: {
   if (hired > 0) {
     return {
       title: "¡Conseguiste trabajo!",
-      body: "Tu embudo llegó a Hired. Si querés comparar búsquedas futuras, seguí registrando aplicaciones desde el inicio de cada proceso.",
+      body: "Tu embudo llegó a Hired. Si querés comparar búsquedas futuras, seguí registrando postulaciones desde el inicio de cada proceso.",
       tone: "emerald",
     };
   }
@@ -108,16 +109,16 @@ function buildInsight(args: {
 
   if (totalApps >= 5 && interviewRate < 12 && weeksTracked >= 2) {
     return {
-      title: "Muchas aplicaciones, pocas entrevistas",
-      body: "El ratio entrevistas/aplicaciones está bajo. Revisá: calidad del CV (ATS), carta de presentación, roles alineados a tu perfil, y volumen en las plataformas donde mejor te responden.",
+      title: "Muchas postulaciones, pocas entrevistas",
+      body: "El ratio entrevistas/postulaciones está bajo. Revisá: calidad del CV (ATS), carta de presentación, roles alineados a tu perfil, y volumen en las plataformas donde mejor te responden.",
       tone: "amber",
     };
   }
 
   if (avgAppsPerWeek > 0 && avgAppsPerWeek < 2 && totalApps >= 3) {
     return {
-      title: "Ritmo de aplicaciones moderado",
-      body: "Un ritmo de ~3–5 aplicaciones por semana suele mantener el pipeline activo (según tu disponibilidad). Si querés más entrevistas, el primer dial suele ser subir volumen o mejorar conversión del CV.",
+      title: "Ritmo de postulaciones moderado",
+      body: "Un ritmo de ~3–5 postulaciones por semana suele mantener el pipeline activo (según tu disponibilidad). Si querés más entrevistas, el primer dial suele ser subir volumen o mejorar conversión del CV.",
       tone: "default",
     };
   }
@@ -294,7 +295,7 @@ export default function AnalyticsPage() {
   const progressData = progress.slice(-8).map((w) => ({
     week: new Date(w.weekStart).toLocaleDateString("es-AR", { day: "2-digit", month: "short" }),
     Algoritmos: w.problemsSolved,
-    Aplicaciones: w.applicationsSubmitted,
+    Postulaciones: w.applicationsSubmitted,
     "Inglés (min)": w.englishMinutes,
     Entrevistas: w.interviewsCompleted,
   }));
@@ -314,10 +315,11 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
+      <AppSectionIntro sectionId="analytics" />
       <div>
         <h1 className="text-2xl font-bold text-text">Tu progreso</h1>
         <p className="text-text-muted text-sm mt-1">
-          Vista general de tu búsqueda en el tiempo: aplicaciones, entrevistas y señales para decidir si subir volumen o ajustar conversión.
+          Vista general de tu búsqueda en el tiempo: postulaciones, entrevistas y señales para decidir si subir volumen o ajustar conversión.
         </p>
       </div>
 
@@ -326,7 +328,7 @@ export default function AnalyticsPage() {
           <TrendingUp className="h-12 w-12 opacity-30" />
           <p className="font-medium">Todavía no hay datos</p>
           <p className="text-xs max-w-sm">
-            Cargá aplicaciones en el Kanban con fecha de postulación. Acá vas a ver ritmo semanal, entrevistas y embudo desde el día uno.
+            Cargá postulaciones en el Kanban con fecha de postulación. Acá vas a ver ritmo semanal, entrevistas y embudo desde el día uno.
           </p>
         </div>
       ) : (
@@ -337,7 +339,7 @@ export default function AnalyticsPage() {
                 <Calendar className="h-4 w-4 text-primary shrink-0" />
                 <span>
                   Búsqueda activa desde <strong className="text-text">{journey.label}</strong>
-                  <span className="text-text-muted font-normal"> · {journey.diffDays} días · ~{avgAppsPerWeek.toFixed(1)} aplicaciones/semana (promedio)</span>
+                  <span className="text-text-muted font-normal"> · {journey.diffDays} días · ~{avgAppsPerWeek.toFixed(1)} postulaciones/semana (promedio)</span>
                 </span>
               </div>
             </div>
@@ -360,7 +362,7 @@ export default function AnalyticsPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { label: "Total aplicaciones", value: String(totalApps), icon: Briefcase, color: "text-blue-400", bg: "bg-blue-500/10", hint: null as string | null },
+              { label: "Total postulaciones", value: String(totalApps), icon: Briefcase, color: "text-blue-400", bg: "bg-blue-500/10", hint: null as string | null },
               { label: "En proceso (no rechazadas)", value: String(activeApps), icon: Zap, color: "text-amber-400", bg: "bg-amber-500/10", hint: null },
               { label: "Entrevistas registradas", value: String(allInterviews.length), icon: Users, color: "text-purple-400", bg: "bg-purple-500/10", hint: null },
               {
@@ -369,7 +371,7 @@ export default function AnalyticsPage() {
                 icon: Target,
                 color: "text-cyan-400",
                 bg: "bg-cyan-500/10",
-                hint: ratesReliable ? "de tus aplicaciones" : `Necesitás ≥${SMALL_SAMPLE} apps para un % estable`,
+                hint: ratesReliable ? "de tus postulaciones" : `Necesitás ≥${SMALL_SAMPLE} apps para un % estable`,
               },
               {
                 label: "Llegan a oferta",
@@ -377,7 +379,7 @@ export default function AnalyticsPage() {
                 icon: Trophy,
                 color: "text-emerald-400",
                 bg: "bg-emerald-500/10",
-                hint: ratesReliable ? "de tus aplicaciones" : `Necesitás ≥${SMALL_SAMPLE} apps para un % estable`,
+                hint: ratesReliable ? "de tus postulaciones" : `Necesitás ≥${SMALL_SAMPLE} apps para un % estable`,
               },
               { label: "Hired", value: String(statusCounts.hired), icon: Calendar, color: "text-primary", bg: "bg-primary/10", hint: null },
             ].map((stat) => (
@@ -395,7 +397,7 @@ export default function AnalyticsPage() {
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-5 lg:col-span-2">
               <h3 className="font-semibold text-text mb-1 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" /> Aplicaciones por semana
+                <TrendingUp className="h-4 w-4 text-primary" /> Postulaciones por semana
               </h3>
               <p className="text-xs text-text-muted mb-4">Desde tu primera postulación registrada (ritmo de salida al mercado).</p>
               <ResponsiveContainer width="100%" height={240}>
@@ -410,7 +412,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="week" tick={{ fill: "#a1a1aa", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis allowDecimals={false} tick={{ fill: "#a1a1aa", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="count" name="Aplicaciones" stroke={COLORS.primary} fill="url(#colorApps)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="count" name="Postulaciones" stroke={COLORS.primary} fill="url(#colorApps)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
               {weeklyAppsData.length <= 1 && (
@@ -425,7 +427,7 @@ export default function AnalyticsPage() {
                 <h3 className="font-semibold text-text mb-1 flex items-center gap-2">
                   <Users className="h-4 w-4 text-primary" /> Entrevistas por semana
                 </h3>
-                <p className="text-xs text-text-muted mb-4">Según la fecha de cada entrevista en tus aplicaciones.</p>
+                <p className="text-xs text-text-muted mb-4">Según la fecha de cada entrevista en tus postulaciones.</p>
                 <ResponsiveContainer width="100%" height={220}>
                   <ComposedChart data={interviewsOverTime} margin={{ left: 0, right: 10, top: 8, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -440,7 +442,7 @@ export default function AnalyticsPage() {
 
             <div className="rounded-xl border border-border bg-surface p-5">
               <h3 className="font-semibold text-text mb-4 flex items-center gap-2">
-                <Target className="h-4 w-4 text-primary" /> Embudo (aplicaciones → hired)
+                <Target className="h-4 w-4 text-primary" /> Embudo (postulaciones → hired)
               </h3>
               <div className="space-y-3">
                 {funnelData.map((step, i) => {
@@ -513,7 +515,7 @@ export default function AnalyticsPage() {
                   })}
                 </div>
                 <div className="mt-4 pt-3 border-t border-border text-xs text-text-muted">
-                  {platformData.length} plataforma{platformData.length !== 1 ? "s" : ""} · {totalApps} aplicación
+                  {platformData.length} plataforma{platformData.length !== 1 ? "s" : ""} · {totalApps} postulación
                   {totalApps !== 1 ? "es" : ""} en total
                 </div>
               </div>
@@ -608,7 +610,7 @@ export default function AnalyticsPage() {
                 <h3 className="font-semibold text-text mb-1 flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-primary" /> Lo que registraste en progreso semanal
                 </h3>
-                <p className="text-xs text-text-muted mb-3">Desde la página Progreso (algoritmos, apps, inglés, entrevistas practicadas).</p>
+                <p className="text-xs text-text-muted mb-3">Desde la página Progreso (algoritmos, postulaciones, inglés, entrevistas practicadas).</p>
                 <ResponsiveContainer width="100%" height={240}>
                   <LineChart data={progressData} margin={{ left: 0, right: 10, top: 8, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -616,7 +618,7 @@ export default function AnalyticsPage() {
                     <YAxis tick={{ fill: "#a1a1aa", fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip content={<CustomTooltip />} />
                     <Line type="monotone" dataKey="Algoritmos" stroke={COLORS.primary} strokeWidth={2} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="Aplicaciones" stroke={COLORS.blue} strokeWidth={2} dot={{ r: 3 }} />
+                    <Line type="monotone" dataKey="Postulaciones" stroke={COLORS.blue} strokeWidth={2} dot={{ r: 3 }} />
                     <Line type="monotone" dataKey="Inglés (min)" stroke={COLORS.amber} strokeWidth={2} dot={{ r: 3 }} />
                     <Line type="monotone" dataKey="Entrevistas" stroke={COLORS.emerald} strokeWidth={2} dot={{ r: 3 }} />
                   </LineChart>
@@ -624,7 +626,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-wrap gap-4 mt-3 justify-center">
                   {[
                     { label: "Algoritmos", color: COLORS.primary },
-                    { label: "Aplicaciones", color: COLORS.blue },
+                    { label: "Postulaciones", color: COLORS.blue },
                     { label: "Inglés (min)", color: COLORS.amber },
                     { label: "Entrevistas", color: COLORS.emerald },
                   ].map((item) => (

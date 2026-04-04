@@ -39,15 +39,15 @@ function getCountdown(date: string, time?: string): { text: string; urgency: "pa
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
 
-  if (diffMs < 0) return { text: "Ya pasó", urgency: "past" };
+  if (diffMs < 0) return { text: "Ya pas├│", urgency: "past" };
   if (diffDays === 0) {
     if (diffHours <= 1) return { text: "En menos de 1 hora!", urgency: "today" };
     return { text: `Hoy - en ${diffHours}h`, urgency: "today" };
   }
-  if (diffDays === 1) return { text: "Mañana!", urgency: "soon" };
-  if (diffDays <= 3) return { text: `En ${diffDays} días`, urgency: "soon" };
-  if (diffDays <= 7) return { text: `En ${diffDays} días`, urgency: "future" };
-  return { text: `En ${diffDays} días`, urgency: "future" };
+  if (diffDays === 1) return { text: "Ma├▒ana!", urgency: "soon" };
+  if (diffDays <= 3) return { text: `En ${diffDays} d├¡as`, urgency: "soon" };
+  if (diffDays <= 7) return { text: `En ${diffDays} d├¡as`, urgency: "future" };
+  return { text: `En ${diffDays} d├¡as`, urgency: "future" };
 }
 
 export default function ApplicationDetailPage() {
@@ -72,7 +72,7 @@ export default function ApplicationDetailPage() {
   if (!app) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-text-muted">Aplicación no encontrada</p>
+        <p className="text-text-muted">Aplicaci├│n no encontrada</p>
       </div>
     );
   }
@@ -184,7 +184,7 @@ export default function ApplicationDetailPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <button onClick={() => router.push("/applications")} className="text-text-muted hover:text-text">
+        <button onClick={() => router.push("/postulaciones")} className="text-text-muted hover:text-text">
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
@@ -239,7 +239,7 @@ export default function ApplicationDetailPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-purple-400" />
-              <h2 className="font-semibold">Preparación</h2>
+              <h2 className="font-semibold">Preparaci├│n</h2>
             </div>
             {prepTotal > 0 && (
               <span className="text-xs text-text-muted">{prepCompleted}/{prepTotal}</span>
@@ -282,7 +282,7 @@ export default function ApplicationDetailPage() {
             <input
               value={newPrepLabel}
               onChange={(e) => setNewPrepLabel(e.target.value)}
-              placeholder="Ej: Repasar patrones de diseño, Practicar Two Pointers..."
+              placeholder="Ej: Repasar patrones de dise├▒o, Practicar Two Pointers..."
               className="flex-1 rounded-lg border border-border bg-surface-light px-3 py-2 text-sm text-text focus:border-primary focus:outline-none"
             />
             <button type="submit" className="rounded-lg bg-primary px-3 py-2 text-sm text-white hover:bg-primary-hover">
@@ -308,7 +308,7 @@ export default function ApplicationDetailPage() {
 
           {(app.interviews || []).length === 0 ? (
             <p className="text-sm text-text-muted text-center py-4">
-              No hay entrevistas registradas todavía
+              No hay entrevistas registradas todav├¡a
             </p>
           ) : (
             <div className="space-y-3">
@@ -385,7 +385,7 @@ export default function ApplicationDetailPage() {
                                   : "bg-surface text-text-muted hover:bg-surface-lighter"
                               }`}
                             >
-                              {r === "passed" ? "Pasé" : r === "failed" ? "No pasé" : "Pendiente"}
+                              {r === "passed" ? "Pas├®" : r === "failed" ? "No pas├®" : "Pendiente"}
                             </button>
                           ))}
                         </div>
@@ -446,7 +446,7 @@ export default function ApplicationDetailPage() {
           value={journalNotes}
           onChange={(e) => setJournalNotes(e.target.value)}
           rows={6}
-          placeholder="Anotá lo que necesites: qué te pidieron, qué tecnologías usan, cultura de la empresa, preguntas que te hicieron, feedback, etc."
+          placeholder="Anot├í lo que necesites: qu├® te pidieron, qu├® tecnolog├¡as usan, cultura de la empresa, preguntas que te hicieron, feedback, etc."
           className="w-full rounded-lg border border-border bg-surface-light px-4 py-3 text-sm text-text leading-relaxed focus:border-primary focus:outline-none resize-y"
         />
       </div>
@@ -484,7 +484,7 @@ export default function ApplicationDetailPage() {
               </div>
               <div>
                 <label className="block text-sm text-text-muted mb-1">Notas</label>
-                <textarea name="notes" rows={3} defaultValue={editingInterview?.notes || ""} placeholder="Con quién, qué me preguntaron, qué tengo que preparar..." className="w-full rounded-lg border border-border bg-surface-light px-3 py-2 text-sm text-text focus:border-primary focus:outline-none resize-none" />
+                <textarea name="notes" rows={3} defaultValue={editingInterview?.notes || ""} placeholder="Con qui├®n, qu├® me preguntaron, qu├® tengo que preparar..." className="w-full rounded-lg border border-border bg-surface-light px-3 py-2 text-sm text-text focus:border-primary focus:outline-none resize-none" />
               </div>
               <div className="flex justify-end gap-3">
                 <button type="button" onClick={() => { setShowInterviewForm(false); setEditingInterview(null); }} className="rounded-lg border border-border px-4 py-2 text-sm text-text-muted hover:text-text">

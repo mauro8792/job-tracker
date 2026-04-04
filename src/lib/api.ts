@@ -1,6 +1,14 @@
 "use client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+/** Base de la API (incluye `/api` del prefijo global de Nest). Si en Vercel olvidás el `/api`, lo agregamos. */
+function normalizeApiBaseUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+  const trimmed = raw.trim().replace(/\/+$/, "");
+  if (trimmed.endsWith("/api")) return trimmed;
+  return `${trimmed}/api`;
+}
+
+const API_URL = normalizeApiBaseUrl();
 
 function getAccessToken(): string | null {
   if (typeof window === "undefined") return null;

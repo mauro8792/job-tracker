@@ -26,7 +26,7 @@ import { useAuth } from "@/lib/auth";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/applications", label: "Aplicaciones", icon: Kanban },
+  { href: "/postulaciones", label: "Postulaciones", icon: Kanban },
   { href: "/calendar-import", label: "Calendario", icon: CalendarPlus },
   { href: "/platforms", label: "Plataformas", icon: Globe },
   { href: "/checklist", label: "Checklist diaria", icon: CheckSquare },
@@ -38,7 +38,7 @@ const NAV_ITEMS = [
   { href: "/community", label: "Comunidad", icon: Users },
   { href: "/feed", label: "Feed & bolsa", icon: Newspaper },
   { href: "/resources", label: "Recursos", icon: BookOpen },
-  { href: "/pitch", label: "Pitch Builder", icon: Sparkles },
+  { href: "/pitch", label: "Presentación", icon: Sparkles },
   { href: "/templates", label: "Templates", icon: FileText },
 ];
 
@@ -119,7 +119,14 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-text">{user.firstName} {user.lastName}</p>
-                <p className="truncate text-[11px] text-text-muted">{user.plan === "trial" ? "Plan Trial" : user.plan === "pro" ? "Plan Pro" : "Plan Free"}</p>
+                <p className="truncate text-[11px] text-text-muted">
+                  {user.plan === "trial"
+                    ? "Plan Trial"
+                    : user.plan === "pro"
+                      ? "Plan Pro"
+                      : "Plan Free"}
+                  {user.hasActiveBonusAccess ? " · bonus" : ""}
+                </p>
               </div>
             </Link>
           )}

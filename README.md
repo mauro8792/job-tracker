@@ -1,6 +1,15 @@
 # DevJobTracker
 
-App web para desarrolladores de LATAM que buscan trabajo remoto en USA/Europa. Centraliza plataformas, aplicaciones, preparación de entrevistas, CV, y progreso semanal en un solo lugar.
+App web para desarrolladores de LATAM que buscan trabajo remoto en USA/Europa. Centraliza plataformas, **postulaciones** (seguimiento de procesos), preparación de entrevistas, CV y progreso semanal en un solo lugar.
+
+## Rutas principales
+
+- **Kanban / listado:** [`/postulaciones`](http://localhost:3000/postulaciones)
+- **Detalle de una postulación:** `/postulaciones/[id]`
+
+Las URLs antiguas `/applications` y `/applications/[id]` redirigen con **301** a `/postulaciones` (compatibilidad con bookmarks).
+
+Los endpoints REST del backend siguen usando el path `applications` (p. ej. `GET /api/applications`); eso no cambia la URL del navegador.
 
 ## Demo
 
@@ -37,9 +46,9 @@ src/app/
 └── (app)/                # Route group → layout con sidebar
     ├── layout.tsx        # App layout (sidebar + header mobile)
     ├── dashboard/
-    ├── applications/
+    ├── postulaciones/
     │   ├── page.tsx      # Kanban board
-    │   └── [id]/page.tsx # Detalle dinámico por aplicación
+    │   └── [id]/page.tsx # Detalle dinámico por postulación
     ├── platforms/
     ├── checklist/
     ├── progress/
@@ -90,7 +99,7 @@ src/
 
 ### 4. Composition Pattern
 
-Cada página es auto-contenida y compone su propia UI. No hay un mega-componente. Por ejemplo, la página de detalle de aplicación (`applications/[id]/page.tsx`) compone:
+Cada página es auto-contenida y compone su propia UI. No hay un mega-componente. Por ejemplo, la página de detalle de postulación (`postulaciones/[id]/page.tsx`) compone:
 
 - Un header con datos
 - Un selector de estado
@@ -121,7 +130,7 @@ El idioma activo selecciona qué contenido mostrar sin duplicar lógica.
 
 ### 7. Feature-based File Organization
 
-Las páginas se organizan por feature/dominio (applications, platforms, checklist, etc.), no por tipo de archivo. Esto facilita la navegación y el ownership del código.
+Las páginas se organizan por feature/dominio (postulaciones, platforms, checklist, etc.), no por tipo de archivo. Esto facilita la navegación y el ownership del código.
 
 ### 8. Mobile-first Responsive Design
 
@@ -136,8 +145,8 @@ Las operaciones del store son síncronas (localStorage), así que toda interacci
 | Feature | Descripción |
 |---|---|
 | **Dashboard** | Vista general con stats, próximas entrevistas, checklist, plataformas |
-| **Kanban de aplicaciones** | Drag & drop entre columnas (Wishlist → Applied → Interview → Offer → Rejected) |
-| **Detalle de aplicación** | Notas, checklist de preparación, timeline de entrevistas con countdown |
+| **Kanban de postulaciones** | Drag & drop entre columnas (Wishlist → Applied → Interview → Offer → Rejected) |
+| **Detalle de postulación** | Notas, checklist de preparación, timeline de entrevistas con countdown |
 | **Plataformas** | 10 plataformas pre-cargadas con estado, perfil y alertas |
 | **Checklist diaria** | Se resetea cada día, editable (agregar, editar, borrar items) |
 | **Progreso semanal** | Metas semanales con barras de progreso + historial |
@@ -180,7 +189,7 @@ Las operaciones del store son síncronas (localStorage), así que toda interacci
 
 | Feature | Límite |
 |---|---|
-| Kanban | Máx 5 aplicaciones |
+| Kanban | Máx 10 postulaciones (según política actual del backend) |
 | Checklist diaria | ✅ |
 | Plataformas | ✅ |
 | Progreso semanal | Solo actual (sin histórico) |
@@ -242,7 +251,7 @@ npm run lint
 
 | Key | Tipo | Descripción |
 |---|---|---|
-| `djt_applications` | `Application[]` | Todas las aplicaciones del kanban |
+| `djt_applications` | `Application[]` | Todas las postulaciones del kanban (el nombre de la key es histórico; en UI decimos “postulaciones”) |
 | `djt_platforms` | `Platform[]` | Estado de las plataformas |
 | `djt_checklist` | `ChecklistItem[]` | Todos los items de checklist (multi-día) |
 | `djt_progress` | `WeeklyProgress[]` | Registros de progreso semanal |
