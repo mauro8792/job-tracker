@@ -3,8 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { BookOpen, HelpCircle, Sparkles, X } from "lucide-react";
-
-const storageKey = (userId: string) => `djt_welcome_onboarding_v1:${userId}`;
+import {
+  welcomeOnboardingStorageKey,
+  WELCOME_ONBOARDING_DISMISSED_EVENT,
+} from "@/lib/onboarding-storage";
 
 type Props = {
   userId: string;
@@ -17,7 +19,7 @@ export function WelcomeOnboardingModal({ userId, firstName }: Props) {
   useEffect(() => {
     if (!userId || typeof window === "undefined") return;
     try {
-      if (localStorage.getItem(storageKey(userId))) return;
+      if (localStorage.getItem(welcomeOnboardingStorageKey(userId))) return;
     } catch {
       return;
     }
@@ -26,11 +28,16 @@ export function WelcomeOnboardingModal({ userId, firstName }: Props) {
 
   const dismiss = useCallback(() => {
     try {
-      localStorage.setItem(storageKey(userId), "1");
+      localStorage.setItem(welcomeOnboardingStorageKey(userId), "1");
     } catch {
       /* ignore quota */
     }
     setOpen(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent(WELCOME_ONBOARDING_DISMISSED_EVENT, { detail: { userId } }),
+      );
+    }
   }, [userId]);
 
   useEffect(() => {
@@ -48,7 +55,7 @@ export function WelcomeOnboardingModal({ userId, firstName }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[300] flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="welcome-modal-title"

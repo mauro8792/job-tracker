@@ -25,6 +25,10 @@ import {
   SECTION_INTRO_CONTENT,
   type SectionIntroId,
 } from "@/lib/section-intros";
+import {
+  welcomeOnboardingStorageKey,
+  WELCOME_ONBOARDING_DISMISSED_EVENT,
+} from "@/lib/onboarding-storage";
 
 const SECTION_ICONS: Record<SectionIntroId, LucideIcon> = {
   dashboard: LayoutDashboard,
@@ -60,6 +64,24 @@ export function SectionIntroModal({ userId, sectionId }: ModalProps) {
 
   useEffect(() => {
     if (!userId || typeof window === "undefined") return;
+
+    /** Abre el intro de sección si aún no fue visto (el bienvenida ya se resolvió antes). */
+    const tryOpenSectionIntro = () => {
+      try {
+        if (localStorage.getItem(storageKey(userId, sectionId))) return;
+        if (
+          sectionId === "platforms" &&
+          localStorage.getItem(`djt_platforms_intro_v1:${userId}`)
+        ) {
+          localStorage.setItem(storageKey(userId, "platforms"), "1");
+          return;
+        }
+      } catch {
+        return;
+      }
+      setOpen(true);
+    };
+
     try {
       if (localStorage.getItem(storageKey(userId, sectionId))) return;
       if (
@@ -72,7 +94,24 @@ export function SectionIntroModal({ userId, sectionId }: ModalProps) {
     } catch {
       return;
     }
-    setOpen(true);
+
+    try {
+      if (localStorage.getItem(welcomeOnboardingStorageKey(userId))) {
+        tryOpenSectionIntro();
+        return;
+      }
+    } catch {
+      return;
+    }
+
+    const onWelcomeDone = (e: Event) => {
+      const detail = (e as CustomEvent<{ userId?: string }>).detail;
+      if (detail?.userId && detail.userId !== userId) return;
+      tryOpenSectionIntro();
+    };
+    window.addEventListener(WELCOME_ONBOARDING_DISMISSED_EVENT, onWelcomeDone);
+    return () =>
+      window.removeEventListener(WELCOME_ONBOARDING_DISMISSED_EVENT, onWelcomeDone);
   }, [userId, sectionId]);
 
   const dismiss = useCallback(() => {
